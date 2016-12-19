@@ -1,0 +1,46 @@
+---
+- hosts: dev
+  remote_user: devops
+  become: true
+  vars:
+    web_package: httpd
+    web_service: httpd
+  tasks:
+    - name: Install {{ web_package }} package
+      yum:
+        name: "{{ web_package }}"
+        state: latest
+
+    - name: Start {{ web_service }} service
+      service:
+        name: "{{ web_service }}"
+        state: started
+
+    - name: Create web content
+      copy:
+        content: "Apache httpd server running on {{ ansible_fqdn }}\n"
+        dest: /var/www/html/index.html
+      notify:
+        - restart_httpd
+
+    # The test will be executed on localhost.
+    # Ansible will connect to localhost using local transport
+    - name: Test if the web server is working
+      uri:
+        url: "http://{{ ansible_fqdn }}"
+        status_code: 200
+      delegate_to: localhost
+      become: false
+      connection: local
+      register: test
+
+    - debug:
+        var: test
+
+  handlers:
+    - name: restart_httpd
+      service:
+        name: "{{ web_service }}"
+        state: restarted
+
+

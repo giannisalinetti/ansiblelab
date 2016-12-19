@@ -1,0 +1,20 @@
+---
+- hosts: all
+  remote_user: devops
+  become: true
+  tasks:
+    - name: Do something
+      command: "ping -c1 {{ item }}"
+      with_items:
+        - servera.lab.example.com
+        - serverb.lab.example.com
+        - tower.lab.example.com
+        - touer.lab.example.com
+      register: ping_test
+      ignore_errors: true
+
+    - debug: msg="Ping succeded"
+      when: ping_test|changed
+
+    - debug: msg="Ping failed"
+      when: ping_test|failed

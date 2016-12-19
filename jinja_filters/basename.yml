@@ -1,0 +1,17 @@
+---
+- name: Print basename
+  hosts: all
+  remote_user: devops
+  become: true
+  vars:
+    sys_commands:
+      - /usr/bin/ls
+      - /usr/sbin/shutdown
+      - /usr/sbin/ip
+  tasks:
+    - name:
+      lineinfile: 
+        dest: /tmp/testfile 
+        line: "{{ item|basename }}"
+        create: yes
+      with_items: "{{ sys_commands }}"

@@ -1,0 +1,18 @@
+---
+- name: Encode strings in base64
+  hosts: all
+  remote_user: devops
+  vars:
+    raw_strings:
+      - "This is a simple name"
+      - "Connecto to the rest of the world"
+  tasks:
+    - name: Base64 encode
+      command: "echo {{ item|b64encode }}"
+      with_items: 
+        - "{{ raw_strings }}"
+      register: test_encode
+
+    - debug:
+        var: item.stdout
+      with_items: "{{ test_encode.results }}"

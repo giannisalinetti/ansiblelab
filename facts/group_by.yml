@@ -1,0 +1,22 @@
+---
+- name: Collect grouping informations
+  hosts: all
+  remote_user: devops
+  become: true
+  tasks:
+    - group_by:
+        key: "os_{{ ansible_distribution }}"
+
+- name: Install httpd on Red Hat hosts
+  hosts: os_RedHat
+  remote_user: devops
+  become: true
+  tasks:
+    - yum: name=httpd state=latest
+
+- name: Install apache on Debian hosts
+  hosts: os_Debian
+  remote_user: devops
+  become: true
+  tasks:
+    - apt: name=apache state=latest  

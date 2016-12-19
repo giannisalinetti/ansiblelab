@@ -1,0 +1,16 @@
+---
+- hosts: all
+  remote_user: devops
+  become: true
+  vars:
+    tower: tower.lab.example.com
+  tasks:
+    - name: Execute a simple ping
+      shell: "ping -c1 {{ tower }}"
+      register: ping_test
+
+    - name: Define new fact
+      set_fact:
+        tower_alive: "{{ ping_test.stdout }}"
+
+    

@@ -1,0 +1,29 @@
+---
+- hosts: dev
+  remote_user: devops
+  become: true
+  environment:
+    JBOSS_HOME: /opt/jboss-eap
+
+  tasks:
+    - name: Unzip jboss-eap archive
+      unarchive:
+        src: /tmp/jboss-eap-7_test.zip
+        dest: "{{ ansible_env.JBOSS_HOME }}"
+        copy: no
+      ignore_errors: true
+      register: jboss_deploy
+
+    - name: Add a management user
+      shell: "{{ ansible_env.JBOSS_HOME }}/bin/add-user.sh admin JBoss@MyLab251 --silent"
+      when: jboss_deploy.changed
+
+    - name:
+      lineinfile:
+        create: yes
+        dest: /home/student/.bashrc
+        line: "{{ item }}"
+      with_items:
+        - "JBOSS_HOME={{ ansible_env.JBOSS_HOME }}"
+        - "export JBOSS_HOME"
+      when: jboss_deploy.changed

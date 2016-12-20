@@ -1,0 +1,17 @@
+---
+- hosts: dev
+  remote_user: devops
+  tasks:
+    - name: Add tower to test group
+      add_host:
+        name: tower.lab.example.com
+        group: test
+
+    - name: Install httpd on test group
+      yum:
+        name: httpd
+        state: latest
+      become: true
+      delegate_to: "{{ item }}"
+      with_items: "{{ groups.test }}"
+      

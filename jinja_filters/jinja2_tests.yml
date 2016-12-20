@@ -1,0 +1,29 @@
+---
+- hosts: dev
+  remote_user: devops
+  become: true
+  vars:
+    url: "http://example.com/users/foo/resources/bar"
+    mypath: "/etc/yum.repos.d"
+    myfile1: "/var/www/html/index.html"
+  tasks:
+    - debug:
+        msg: 'matched pattern 1'
+      when: url|match("http://example.com/users/.*/resources/.*")
+    - debug:
+        msg: "{{ mypath }} is a directory"
+      when: mypath|is_dir
+    - debug:
+        msg: "{{ mypath }} is a regular file"
+      when: mypath|is_file
+    - debug:
+        msg: "{{ mypath }} is a symlink"
+      when: mypath|is_link
+    - debug: 
+        msg: "{{ myfile1 }} exits"
+      when: myfile1|exists
+    - debug: 
+        msg: "{{ myfile1 }} does not exits"
+      when: not myfile1|exists
+      
+

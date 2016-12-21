@@ -16,6 +16,8 @@
         var: yum_update
 
     # Executed only when the pattern kernel is found in the output
+    # sleep is necessary after ansible 1.9.1 to ensure the correct
+    # behaviuor of sshd connection closing in all linux distributions 
     - name: Reboot the server
       shell: sleep 2 && shutdown -r now 'Maintenance reboot'
       async: 1

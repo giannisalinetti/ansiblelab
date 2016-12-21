@@ -1,0 +1,31 @@
+---
+# This playbook uses multiple groups in or patter (:)
+# Deploys in a rolling fashion using serial directive (50%) with max_fail_percentage: 30
+# Installs and removes package groups with yum module.
+# The package group installation does not accept the "latest" state.
+
+- hosts: dev:prod:test
+  remote_user: devops
+  become: true
+  max_fail_percentage: 30
+  serial: "50%"
+  tasks:
+    - name: Install web-servlet group
+      yum:
+        name: "@web-servlet"
+        state: present
+      register: tomcat_setup
+
+    - name: Print debug
+      debug:
+        var: tomcat_setup
+    
+    - name: Handle failure
+      fail:
+        msg: "web-servlet package group setup error"
+      when: tomcat_setup.rc != 0
+ 
+    - name: Remove web-servlet group
+      yum:
+        name: "@web-servlet"
+        state: absent

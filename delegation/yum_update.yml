@@ -17,7 +17,7 @@
 
     # Executed only when the pattern kernel is found in the output
     - name: Reboot the server
-      shell: sleep 1 && shutdown -r now 'Maintenance reboot'
+      shell: sleep 2 && shutdown -r now 'Maintenance reboot'
       async: 1
       poll: 0
       ignore_errors: true

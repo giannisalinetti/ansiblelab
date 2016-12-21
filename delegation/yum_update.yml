@@ -1,0 +1,36 @@
+---
+- name: Simple yum update playbook
+  hosts: lnxcts
+  remote_user: devops
+  become: true
+  serial: 1
+  tasks:
+    - name: Exec yum update
+      yum:
+        name: "*"
+        state: latest
+      register: yum_update
+
+    - name: Print the update result
+      debug:
+        var: yum_update
+
+    # Executed only when the pattern kernel is found in the output
+    - name: Reboot the server
+      shell: sleep 1 && shutdown -r now 'Maintenance reboot'
+      async: 1
+      poll: 0
+      ignore_errors: true
+      when: "'kernel' in yum_update.results[0]"
+
+    - name: Verify if {{ inventory_hostname }} has rebooted
+      wait_for:
+        host: "{{ inventory_hostname }}"
+        port: 22
+        state: started
+        delay: 25
+        timeout: 200
+      become: false
+      delegate_to: localhost
+      when: "'kernel' in yum_update.results[0]"
+

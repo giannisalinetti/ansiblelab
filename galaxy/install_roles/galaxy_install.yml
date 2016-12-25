@@ -2,16 +2,17 @@
 - hosts: 127.0.0.1
   vars:
     role_name: smtp_glx.yml
+    role_dir: roles
 
   tasks:
 
     - name: Create roles directory
       file:
-        path: roles
+        path: "{{ role_dir }}"
         state: directory
         mode: 0755
 
     - name: Install role
-      command: "ansible-galaxy install -r {{ role_name }} -p roles"
+      command: "ansible-galaxy install -r {{ role_name }} -p {{ role_dir }}"
 
       

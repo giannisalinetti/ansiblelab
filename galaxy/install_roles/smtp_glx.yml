@@ -1,0 +1,3 @@
+---
+- src: custom_smtp_20161225.tar.gz
+  name: custom_smtp

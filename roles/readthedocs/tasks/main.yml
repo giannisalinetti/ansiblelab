@@ -50,7 +50,7 @@
 
 - name: Create superuser
   django_manage:
-    command: "createsuperuser --noinput --username=rtdadmin --email=gbs@localhost"
+    command: "createsuperuser --noinput --username=admin --email={{ admin_email }}"
     app_path: "{{ venv }}//checkouts/readthedocs.org"
 
 - name: Generate static assets

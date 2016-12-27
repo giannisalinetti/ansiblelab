@@ -13,6 +13,7 @@ Role Variables
 
 Default variables:
   venv: /opt/rtd
+  admin_email: root@localhost
 
 Main vars:
 
@@ -34,7 +35,7 @@ Example Playbook
 
     - hosts: servers
       roles:
-         - { role: gbs.readthedocs, venv: /opt/docs }
+         - { role: gbs.readthedocs, venv: /opt/docs, admin_email: admin@mysite.org }
 
 License
 -------

@@ -1,0 +1,11 @@
+---
+# vars file for readthedocs
+
+pre_pkg:
+  - python-devel
+  - python2-pip
+  - python-setuptools
+  - python-virtualenv
+  - libxml2-devel
+  - libxslt-devel
+  - zlib-devel

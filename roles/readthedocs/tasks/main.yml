@@ -1,0 +1,65 @@
+---
+# tasks file for readthedocs
+
+- name: Enable epel repositories
+  yum_repository:
+    name: epel
+    description: EPEL YUM repo
+    baseurl: http://download.fedoraproject.org/pub/epel/$releasever/$basearch/
+    gpgcheck: no
+
+- name: Install required packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ pre_pkg }}"
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: latest
+
+- name: Create virtualenv
+  shell: "virtualenv {{ venv }}"
+  ignore_errors: true
+
+- name: Activate virtualenv
+  shell: "source {{ venv }}/bin/activate"
+
+- name: Create checkouts
+  file:
+    path: "{{ venv }}/checkouts"
+    state: directory
+    mode: 0755
+
+- name: Checkout git repo
+  git:
+    repo: https://github.com/rtfd/readthedocs.org.git
+    dest: "{{ venv }}/checkouts/readthedocs.org"
+   
+- name: Install packages with pip
+  pip:
+    chdir: "{{ venv }}/checkouts/readthedocs.org"
+    requirements: requirements.txt
+    virtualenv: "{{ venv }}" 
+
+- name: Building database
+  django_manage:
+    command: "migrate"
+    app_path: "{{ venv }}//checkouts/readthedocs.org"
+
+- name: Create superuser
+  django_manage:
+    command: "createsuperuser --noinput --username=rtdadmin --email=gbs@localhost"
+    app_path: "{{ venv }}//checkouts/readthedocs.org"
+
+- name: Generate static assets
+  django_manage:
+    command: "collectstatic"
+    app_path: "{{ venv }}//checkouts/readthedocs.org"
+
+- name: Create test project
+  django_manage:
+    command: "loaddata test_data"
+    app_path: "{{ venv }}//checkouts/readthedocs.org"
+

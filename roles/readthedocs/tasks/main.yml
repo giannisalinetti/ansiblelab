@@ -63,3 +63,15 @@
     command: "loaddata test_data"
     app_path: "{{ venv }}//checkouts/readthedocs.org"
 
+- name: Check if firewalld is installed
+  command: "systemctl status firewalld"
+  register: check_firewalld
+
+- name: Open port 8000/tcp
+  firewalld:
+    port: 8000/tcp
+    state: enabled
+    permanent: true
+    immediate: true
+  when: check_firewalld.rc == 0
+

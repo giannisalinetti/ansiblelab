@@ -65,6 +65,7 @@
 
 - name: Check if firewalld is installed
   command: "systemctl status firewalld"
+  ignore_errors: true
   register: check_firewalld
 
 - name: Open port 8000/tcp

@@ -9,3 +9,5 @@ pre_pkg:
   - libxml2-devel
   - libxslt-devel
   - zlib-devel
+  - git
+  - gcc

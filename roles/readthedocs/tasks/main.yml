@@ -75,4 +75,3 @@
     permanent: true
     immediate: true
   when: check_firewalld.rc == 0
-

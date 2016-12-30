@@ -11,3 +11,4 @@ pre_pkg:
   - zlib-devel
   - git
   - gcc
+  - sphinx

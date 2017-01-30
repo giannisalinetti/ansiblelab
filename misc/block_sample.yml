@@ -1,0 +1,45 @@
+---
+- name: Simple playbook to show block syntax
+  hosts: all
+  remote_user: devops
+  become: true
+  vars:
+    dest_dir: /tmp/jbosslab
+  tasks:
+    - block:
+      - name: Install git
+        dnf:
+          name: git
+          state: latest
+      - name: Checkout git repository
+        git:
+          repo: https://github.com/giannisalinetti/jbosslab.git
+          dest: "{{ dest_dir }}"
+
+      rescue:
+      - name: Test if {{ dest_dir }} already exits
+        stat:
+          path: "{{ dest_dir }}"
+        register: test_dest
+
+      - name: Create destination directory
+        file:
+          path: "{{ dest_dir }}" 
+          state: directory
+          mode: 0755
+        when: test_dest.exists == False
+
+      - name: Download and extract master branch archive
+        unarchive:
+          src: http://github.com/giannisalinetti/jbosslab/archive/master.zip
+          dest: /tmp
+          remote_src: true
+
+      always:
+      - name: Always do something unuseful
+        copy:
+          content: "Just a test file.\n"
+          dest: /tmp/testfile
+
+          
+

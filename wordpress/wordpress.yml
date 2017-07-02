@@ -1,0 +1,66 @@
+---
+- hosts: all
+  remote_user: devops
+  become: true
+  become_user: root
+  vars:
+    lamp_packages:
+      - httpd
+      - php
+      - php-gd
+      - php-mysql
+      - mariadb-server
+      - MySQL-python
+    lamp_services:
+      - httpd
+      - mariadb
+    wp_dist: "http://wordpress.org/latest.tar.gz"
+    apache_docroot: "/var/www/html"
+
+  tasks:
+    - name: Install epel repositories
+      yum:
+        name: epel-release
+        state: present
+
+    - name: Install base packages
+      yum:
+        name: "{{ item }}"
+        state: latest
+      with_items: "{{ lamp_packages }}"
+
+    - name: Start relevant services
+      service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      with_items: "{{ lamp_services }}"
+
+    - name: Download and and install latest wordpress distribution
+      unarchive:
+        src: "{{ wp_dist }}"
+        dest: "{{ apache_docroot }}"
+        copy: no
+        mode: 0755
+        owner: apache
+        group: apache
+      notify:
+        - restart_apache
+
+    - name: Create the Wordpress database
+      mysql_db:
+        name: wordpress
+        state: present
+      
+    - name: Create the Wordpress db user
+      mysql_user:
+        name: wordpressuser
+        password: wplab01
+        priv: wordpress.*:ALL
+        state: present
+
+  handlers:
+    - name: restart_apache
+      service:
+        name: httpd
+        state: restarted

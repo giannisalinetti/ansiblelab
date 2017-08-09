@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  become: false
+  vars:
+    filename: http://ct.mirror.garr.it/mirrors/CentOS/7/isos/x86_64/CentOS-7-x86_64-DVD-1611.iso
+    local_dest: /tmp/CentOS-7-x86_64-DVD-1611.iso
+  tasks:
+    - name: Centos 7.3 image downloaded
+      get_url:
+        url: "{{ filename }}"
+        dest: "{{ local_dest }}"
+        mode: 0644
+      async: 1
+      poll: 0
+      register: download
+
+    - name: Wait for download to finish
+      async_status:
+        jid: "{{ download.ansible_job_id }}"
+      register: job_result
+      until: job_result.finished
+      retries: 30
+      delay: 15

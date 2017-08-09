@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  become: false
+  vars:
+    filename: http://ct.mirror.garr.it/mirrors/CentOS/7/isos/x86_64/CentOS-7-x86_64-DVD-1611.iso
+    local_dest: /tmp/CentOS-7-x86_64-DVD-1611.iso
+  tasks:
+    # This task is going to fail because of a too short async time
+    - name: Centos 7.3 image downloaded
+      get_url:
+        url: "{{ filename }}"
+        dest: "{{ local_dest }}"
+        mode: 0644
+      async: 60
+      poll: 5
+      ignore_errors: true
+
+    # This similar task successfully downloads the file waiting as much as it needs.
+    - name: Centos 7.3 image downloaded
+      get_url:
+        url: "{{ filename }}"
+        dest: "{{ local_dest }}"
+        mode: 0644
+      async: 0
+

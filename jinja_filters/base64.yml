@@ -5,7 +5,7 @@
   vars:
     raw_strings:
       - "This is a simple name"
-      - "Connecto to the rest of the world"
+      - "Connect to the rest of the world"
   tasks:
     - name: Base64 encode
       command: "echo {{ item|b64encode }}"

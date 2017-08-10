@@ -1,6 +1,6 @@
 ---
 - name: Simple yum update playbook
-  hosts: lnxcts
+  hosts: testlab
   remote_user: devops
   become: true
   serial: 1

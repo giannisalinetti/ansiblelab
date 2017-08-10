@@ -1,0 +1,29 @@
+---
+- hosts: servera.lab.example.com
+  become: true
+  remote_user: devops
+  vars:
+    pkg: httpd
+    svc: httpd
+  tasks:
+    - name: "{{ pkg }} is installed"
+      yum:
+        name: "{{ pkg }}"
+        state: latest
+    - name: "{{ svc }} is started"
+      service:
+        name: "{{ svc }}"
+        state: started
+    - name: Add content
+      copy:
+        content: "A simple web page\n"
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: 0644
+    - name: Test functionality
+      become: false
+      uri:
+        url: http://servera.lab.example.com
+        status_code: 200
+      delegate_to: localhost

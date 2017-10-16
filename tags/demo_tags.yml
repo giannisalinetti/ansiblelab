@@ -1,0 +1,35 @@
+---
+- name: Tag based deployment
+  hosts: webservers
+  vars:
+    docroot: /var/www/html
+    giruri: https://git.example.com/custom/app.git
+  tasks:
+  - name: App deployment
+    git:
+      repo: "{{ gituri }}"
+      dest: "{{ docroot }}"
+      version: v1.8-alpha
+    tags: unstable
+  - name: Customize Welcome message
+    lineinfile:
+      path: "{{ docroot }}"/app/welcome.php
+      state: present
+      regexp: '^Welcome to\s'
+      line: 'Welcome to the alpha version'
+    tags: unstable
+  - name: App deployment
+    git:
+      repo: "{{ gituri }}"
+      dest: "{{ docroot }}"
+      version: v1.7.4
+    tags: stable
+  - name: Customize Welcome message
+    lineinfile:
+      path: "{{ docroot }}"/app/welcome.php
+      state: present
+      regexp: '^Welcome to\s'
+      line: 'Welcome to the stable version'
+    tags: unstable
+
+

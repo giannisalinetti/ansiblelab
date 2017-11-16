@@ -1,0 +1,12 @@
+---
+- name: Demonstrate pipelining
+  hosts: all
+  tasks:
+      - name: Create postgres user
+        become: yes
+        become_user: postgres
+        vars:
+            ansible_ssh_pipelining: true
+        postgresql_user:
+            name: user
+

@@ -1,0 +1,38 @@
+---
+- name: First play
+  hosts: dev
+  become: true
+  tasks:
+    - name: Package httpd is installed
+      yum:
+        name: httpd
+        state: latest
+    - name: Service httpd is enabled and running
+      service:
+        name: httpd
+        state: started
+        enabled: true
+    - name: Content is created
+      copy:
+        content: "Hello DO407!"
+        dest: /var/www/html/index.html
+    - name: Configure firewall rules
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: true
+
+- name: Second play
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Test http connection
+      uri:
+        url: http://servera.lab.example.com
+        status_code: 200
+      register: http_get
+
+    - name: Print debug messages
+      debug:
+        var: http_get

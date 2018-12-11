@@ -11,7 +11,11 @@
       yum:
         name: httpd
         state: latest
+      register: webserver
       become: true
       delegate_to: "{{ item }}"
       with_items: "{{ groups.test }}"
       
+    - name: Debug results
+      debug:
+        var: webserver

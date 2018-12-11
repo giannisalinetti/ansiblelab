@@ -1,0 +1,13 @@
+---
+- hosts: all
+  tasks:
+    - name: User Phil exists with UID 2000
+      user:
+        name: phil
+        uid: 2000
+        state: present
+    - name: Group operations exists with GID 1500
+      group:
+        name: operations
+        gid: 1500
+        state: present

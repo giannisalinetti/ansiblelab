@@ -1,0 +1,13 @@
+---
+- name: "Users management"
+  hosts: localhost
+  vars_files:
+    - secret.yml
+  tasks:
+    - name: "Add users without showing loop items"
+      user:
+        name: "{{ item.name }}"
+        password: "{{ item.pw | password_hash('sha512') }}"
+        state: absent
+      loop: "{{ newusers }}"
+      no_log: true

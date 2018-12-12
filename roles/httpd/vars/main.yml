@@ -1,0 +1,9 @@
+---
+# The base packages to be installed
+base_pkg:
+  - httpd
+  - httpd-tools
+  - mod_ssl
+  - mod_wsgi
+# The systemd service name
+web_svc: httpd

@@ -1,0 +1,6 @@
+---
+http_port: 80
+https_port: 443
+fw_ports:
+  - "{{ http_port }}"
+  - "{{ https_port }}"

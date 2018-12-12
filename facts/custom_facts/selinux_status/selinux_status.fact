@@ -1,0 +1,10 @@
+#!/usr/bin/python
+
+import json
+import subprocess
+
+output_dict = {}
+res = subprocess.Popen(['/usr/sbin/getenforce'], shell=True, stdout=subprocess.PIPE)
+output_dict['selinux_enforce'] = {}
+output_dict['selinux_enforce']['status'] = res.communicate()[0].rstrip('\n')
+print(json.dumps(output_dict))

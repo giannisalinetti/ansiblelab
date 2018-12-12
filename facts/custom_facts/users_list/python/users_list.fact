@@ -1,0 +1,42 @@
+#!/usr/bin/python
+
+import json
+import subprocess
+
+# Obtain users list in a list of strings
+def passwd_to_list():
+    # Use getent to print the passwd content on the subprocess pipe
+    res = subprocess.Popen(['/usr/bin/getent passwd'], shell=True, stdout=subprocess.PIPE)
+    return res.communicate()[0].strip('\n').split('\n')
+
+# Split users in a list of dictionaries
+def passwd_to_dict(user_list):
+    user_dict = {}
+    user_dict_list = []
+    for user in user_list:
+        user_split_list = user.split(':')
+        user_dict["name"] = user_split_list[0]
+        user_dict["password"] = user_split_list[1]
+        user_dict["userid"] = user_split_list[2]
+        user_dict["groupid"] = user_split_list[3]
+        user_dict["gecos"] = user_split_list[4]
+        user_dict["home"] = user_split_list[5]
+        user_dict["shell"] = user_split_list[6]
+        user_dict_list.append(user_dict.copy())
+    return user_dict_list
+
+# Create the final output dictionary and dump it as a json
+def main():
+    # Obtain a raw list of users
+    p = passwd_to_list()
+
+    # Create and populate final dictioary
+    output_dict = {}
+    output_dict['passwd'] = {}
+    output_dict['passwd']['content'] = passwd_to_dict(p)
+
+    # Dump in json format
+    print(json.dumps(output_dict))
+
+if __name__ == '__main__':
+    main()

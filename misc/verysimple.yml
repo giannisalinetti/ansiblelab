@@ -1,0 +1,7 @@
+---
+- hosts: all
+  tasks:
+    - name: Create a test file
+      copy:
+          content: "This is a game changer"
+          dest: /tmp/file01.txt

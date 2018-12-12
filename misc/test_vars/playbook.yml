@@ -1,0 +1,11 @@
+- hosts: all
+  vars_files:
+    - vars/user_vars.yml
+  tasks:
+    - name: Create user {{ username }}
+      user:
+        name: "{{ username }}"
+        comment: "{{ first_name }} {{ last_name }}"
+        shell: "{{ shell }}"
+        home: "{{ home }}"
+

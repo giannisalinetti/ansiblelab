@@ -1,0 +1,48 @@
+---
+- name: Install base packages
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ base_pkg }}"
+
+- name: Configure firewall rules
+  firewalld:
+    port: "{{ item }}/tcp"
+    state: enabled
+    permanent: true
+    immediate: true
+  with_items: "{{ fw_ports }}"
+
+- name: Template out the main config file
+  template:
+    src: httpd.conf.j2
+    dest: /etc/httpd/conf/httpd.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - restart_httpd
+
+- name: Template out the ssl config file
+  template:
+    src: ssl.conf.j2
+    dest: /etc/httpd/conf.d/ssl.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - restart_httpd
+
+- name: Template out the main index.html
+  template:
+    src: index.html.j2
+    dest: /var/www/html/index.html
+    mode: 0644
+    owner: root
+    group: root
+
+- name: Start and enable the service
+  service:
+    name: "{{ web_svc }}"
+    state: started
+    enabled: true

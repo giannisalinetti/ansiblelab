@@ -1,14 +1,15 @@
 #Course DO407 - Automation with Ansible
 
-### Creazione di custom fact dinamici
-Questo esempio mostra come sia possibile generare dinamicamente dei custom facts.
-E' uno scenario molto interessante per gli studenti che hanno bisogno di collezionare
-informazioni dinamiche sulle macchine oltre ai default fact di Ansible.
+### Dynamic Ansible Facts
+The examples in this folder show how to create dynamic custom facts. This approach
+is very useful to integrate some extra (dynamically collected) informations from
+the host.
 
-- Il file **selinux_status.fact** verifica se SELinux è abilitato sulla macchina.
-- La directory **users_list** contiene due esempi per raccogliere gli utenti locali in un output JSON.
-Gli esempi mostrano come si possa produrre lo stesso risultato in due linguaggi differenti, **Python** e **Go**.
+- The file **selinux_status.fact** checks if SELinux is enabled on the machine.
+- The directory **users*list** shows a couple of examples to collect local 
+  users informations and output them in JSON format. The examples are written
+  in **Golang** and **Python**.
 
-E' necessario copiare il file in */etc/ansible/facts.d* su tutti i nodi da gestire e
-assicurarsi che esso sia eseguibile. E' **importante** che il file mantenga l'estensione **.fact**.
-
+The custom facts must be copied in the `/etc/ansible/facts.d` folder and the
+executable bit must be set.
+It is **mandatory** to keep the *.fact* extension.

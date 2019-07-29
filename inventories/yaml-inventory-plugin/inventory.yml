@@ -1,0 +1,21 @@
+all:
+  children:
+    ungrouped:
+        workstation.lab.example.com
+          ansible_connection: local
+    lb_servers:
+      hosts:
+        servera.lab.example.com
+      vars:
+        haproxy_version: 2.0
+    web_servers:
+      hosts:
+        serverb.lab.example.com
+        serverc.lab.example.com
+      vars:
+        apache_docroot: /var/www/html
+    backend_server_pool:
+      hosts:
+        server[b:f].lab.example.com
+
+

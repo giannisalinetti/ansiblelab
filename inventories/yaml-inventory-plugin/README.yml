@@ -1,0 +1,14 @@
+# YAML Inventory plugin
+
+Ansible offers different kinds of inventory plugins. They are configured with
+the directive **enable_plugins** in the *ansible.cfg* file.
+
+```
+[inventory]
+...
+enable_plugins = host_list, script, auto, yaml, ini, toml
+```
+
+The **ini** plugin is the default one.
+The **yaml** plugin lets manage inventories in yaml format, wich gives many
+advantages in terms of clarity of the inventory.

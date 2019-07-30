@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # This is done with curl to get a raw JSON output and it is purely for 
+    # demonstration purposes. Use uri module instead to get an already marshaled
+    # output.
+    - name: Inspect a remote api
+      shell: curl https://jsonplaceholder.typicode.com/todos/1
+      register: api_output
+    - name: Set custom fact
+      set_fact:
+        message: "{{ api_output.stdout | from_json }}"
+    - name: Debug stage
+      debug:
+        var: message
+    - name: Print message when userid is 1
+      debug:
+        msg: "Daily tasks for user John."
+      when: message.userId == 1
+
+
+

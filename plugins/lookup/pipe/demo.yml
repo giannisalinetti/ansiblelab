@@ -1,0 +1,10 @@
+---
+- name: Demonstrate pipe lookup plugin
+  hosts: localhost
+  gather_facts: false
+  vars:
+    rich_hostname: "{{ lookup('pipe', 'hostnamectl') }}"
+  tasks:
+    - name: Print debug message
+      debug:
+        var: rich_hostname

@@ -1,0 +1,10 @@
+---
+- name: Demonstrate env lookup plugin
+  hosts: localhost
+  gather_facts: false
+  vars:
+    system_language: "{{ lookup('env', 'LANG') }}"
+  tasks:
+    - name: Print debug message
+      debug:
+        msg: "The controller default language is {{ system_language }}"

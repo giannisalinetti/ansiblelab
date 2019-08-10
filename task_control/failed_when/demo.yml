@@ -1,0 +1,19 @@
+---
+- name: Demostrate the failed_when module
+  hosts: localhost
+  gather_facts: no
+  become: false
+  vars:
+    remote_url: "https://jsonplaceholder.typicode.com/todos/1"
+  tasks:
+    - name: Execute a remote api call
+      uri:
+        url: "{{ remote_url }}"
+        method: "GET"
+        validate_certs: false
+        status_code: 200
+      register: result
+      # The failed when condition enable custom tests on output
+      failed_when: result.json.userId != 1
+    - debug:
+        var: result.json

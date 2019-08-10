@@ -1,0 +1,16 @@
+- name: let's loop over an external file
+  hosts: localhost
+  become: false
+  gather_facts: false
+
+  tasks:
+     - name: Load external yaml file with lookup plugin
+       set_fact:
+         users_file: "{{ lookup('file', 'vars.txt') | from_yaml }}"
+     - debug:
+         var: users
+     - name: print the said records
+       debug:
+          msg: "{{ item.key }} is {{ item.value.name }} {{ item.value.surname }} {{ item.value.city }}"
+       loop: "{{ users_file.users | dict2items }}"
+

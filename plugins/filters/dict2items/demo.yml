@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    my_dict:
+      name: Filippo
+      last_name: Salinetti
+      age_in_months: 6
+  tasks:
+    - set_fact:
+        my_dict2list: "{{ my_dict | dict2items }}"
+    - debug:
+        var: my_dict2list
+    - debug:
+        msg: "Hello my name is {{ my_dict2list[0]['value'] }}"
+
+
+

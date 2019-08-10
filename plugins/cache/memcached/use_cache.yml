@@ -1,0 +1,10 @@
+---
+# This playbook uses the already cached facts
+- name: Using cached facts
+  hosts: localhost
+  # We don't need to gather facts again since they are cached
+  gather_facts: no
+  tasks:
+    - name: Print something from cached facts
+      debug:
+        msg: "Hostname: {{ ansible_facts['hostname'] }}"

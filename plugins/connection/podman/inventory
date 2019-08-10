@@ -1,0 +1,2 @@
+[containers]
+d44ea4a5bf96 ansible_connection=podman

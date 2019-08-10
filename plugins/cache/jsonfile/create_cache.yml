@@ -1,0 +1,10 @@
+---
+- name: Demonstrate jsonfile fact caching
+  # This playbook does nothing but caching data for hosts in the path defined
+  # in the ansible.cfg file
+  hosts: localhost
+  tasks:
+    - debug:
+        msg: "Caching done"
+    
+

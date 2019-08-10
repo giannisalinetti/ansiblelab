@@ -1,0 +1,10 @@
+---
+users:
+  deep:
+    name: Deep
+    surname: Patel
+    city: Vadodara
+  abhi:
+    name: Abhi
+    surname: Patel
+    city: Ahmedabad

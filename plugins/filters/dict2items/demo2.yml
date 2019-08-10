@@ -1,0 +1,21 @@
+- name: let's loop over
+  hosts: localhost
+  become: false
+  gather_facts: false
+  vars:
+    users:
+      deep:
+        name: Deep
+        surname: Patel
+        city: Vadodara
+      abhi:
+        name: Abhi
+        surname: Patel
+        city: Ahmedabad
+
+  tasks:
+     - name: print the said records
+       debug:
+          msg: "{{ item.key }} is {{ item.value.name }} {{ item.value.surname }} {{ item.value.city }}"
+       loop: "{{ users | dict2items }}"
+

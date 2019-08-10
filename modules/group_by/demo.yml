@@ -1,0 +1,29 @@
+---
+- name: Demonstrate the usage of group_by module
+  hosts: localhost
+  tasks:
+    - name: Geneate dynamic groups based on distribution
+      # Group by is a great module to create dynamic groups based on collected
+      # facts on hosts.
+      group_by:
+        key: "dist_{{ ansible_facts['distribution'] | lower }}"
+    - name: Generate dynamic groups based on architecture
+      # It can be used multiple times and hosts can be part of more than 
+      # one group.
+      group_by:
+        key: "arch_{{ ansible_facts['architecture'] }}"
+    - name: Set a custom fact on Fedora hosts
+      set_fact:
+        enterprise: false
+      when: inventory_hostname in groups["dist_fedora"]
+    - name: Print the current groups the host is part of
+      # We're using the group_names magic variable here
+      debug:
+        var: group_names
+    - name: Print hosts in groups
+      # The groups dictionary is converted in a list and looped to print
+      # all the groups and related hosts
+      debug:
+        msg: "{{ item.key }} {{ item.value }}"
+      loop: "{{ groups | dict2items }}"
+    

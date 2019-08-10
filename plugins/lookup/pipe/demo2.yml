@@ -1,0 +1,23 @@
+---
+- name: Obtain local and ldap users list
+  hosts: localhost
+  gather_facts: no
+  become: no
+  tasks:
+    - name: Obtain users and store in dedicated fact
+      set_fact:
+        # The pipe lookup plugin runs a command and returns its output
+        # as a string.
+        users: "{{ lookup('pipe', 'getent passwd') }}"
+    - name: Transform the users fact in a list of users
+      set_fact:
+        # The Jinja2 splitlines() function return a list using the newline as
+        # a delimiter. Like filters, it works on the expanded value of the
+        # variable, not on the variable itself, thus the result must be 
+        # assigned to a new list variable.
+        users_list: "{{ users.splitlines() }}"
+    - name: Available users on system
+      debug:
+        # The Jinja2 split() function splits a line using a custom delimiter.
+        msg: "User: {{ item.split(':')[0] }}, Home: {{ item.split(':')[5] }}, Shell: {{ item.split(':')[6] }}"
+      loop: "{{ users_list }}"

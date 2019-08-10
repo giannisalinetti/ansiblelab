@@ -1,0 +1,11 @@
+---
+- name: Test podman connection plugin functionality
+  hosts: containers
+  gather_facts: no
+  tasks:
+    - name: Execute local command in the container
+      command: hostname
+      register: local_command
+    - name: Debug results
+      debug:
+        var: local_command

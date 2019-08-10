@@ -1,0 +1,18 @@
+- name: Test callback plugins
+  hosts: localhost
+  gather_facts: false
+  pre_tasks:
+    - name: Retrieve content from a remote url
+      uri:
+        url: https://xkcd.com/info.0.json
+        status_code: 200
+        validate_certs: no
+      register: api_call
+
+    - name: Debug results
+      debug:
+        var: api_call.json
+  roles:
+    - role: helloworld
+      helloworld_custom_string: "{{ api_call.json.img }}"
+

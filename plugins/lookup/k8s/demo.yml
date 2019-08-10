@@ -1,0 +1,16 @@
+---
+- name: Demo playbook for k8s lookup plugin
+  hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Collect cluster informations as facts
+      set_fact:
+        nodes_ready: "{{ lookup('k8s', api_version='v1', kind='Node') }}"
+        pods_ready: "{{ lookup('k8s', api_version='v1', kind='Pod') }}" 
+    - name: Dump nodes
+      debug:
+        var: nodes_ready
+    - name: Dump pods
+      debug:
+        var: pods_ready

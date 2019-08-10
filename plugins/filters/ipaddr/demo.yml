@@ -1,0 +1,8 @@
+- name: Test ip address of host
+  hosts: localhost
+  become: false
+  tasks:
+    - name: Verify if ip address is valid
+      debug:
+        msg: "Host default IP address: {{ ansible_facts['default_ipv4']['address'] }}" 
+      when: ansible_facts['default_ipv4']['address'] | ipaddr

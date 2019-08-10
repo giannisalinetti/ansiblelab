@@ -1,0 +1,9 @@
+---
+- name: Demonstrate k8s inventory plugin
+  hosts: all
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Print group names
+      debug:
+        var: groups

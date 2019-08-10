@@ -1,0 +1,4 @@
+- name: Print an helloworld file
+  copy:
+    content: "{{ helloworld_custom_string }}\n"
+    dest: "{{ helloworld_dest_path }}"

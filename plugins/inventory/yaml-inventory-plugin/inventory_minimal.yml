@@ -1,0 +1,15 @@
+region_east:
+  hosts:
+    servera.lab.example.com:
+    serverb.lab.example.com:
+  vars:
+    credentials:
+      token: "{{ region_east_token }}"
+region_west:
+  hosts:
+    serverc.lab.example.com:
+  vars:
+    credentials:
+      token: "{{ region_west_token }}"
+      
+

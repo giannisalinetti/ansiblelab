@@ -2,4 +2,5 @@
 plugin: k8s
 connections:
   - namespaces:
+      - kube-system
       - default

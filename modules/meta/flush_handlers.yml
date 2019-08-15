@@ -29,7 +29,7 @@
       
     - name: Test connectivity from localhost
       uri:
-        url: "http://{{ ansible_facts['fqdn'] }}"
+        url: "http://{{ inventory_hostname }}"
         status_code: 200
       delegate_to: localhost
 

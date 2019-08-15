@@ -1,0 +1,44 @@
+- name: Demonstrate flush_handlers usage of meta module
+  hosts: all
+  become: true
+  vars:
+    httpd_package: httpd
+    httpd_service: httpd
+  tasks:
+    - name: Install available package
+      yum:
+        name: "{{ httpd_package }}"
+        state: latest
+
+    - name: Start service
+      service:
+        name: "{{ httpd_service }}"
+        state: started
+        enabled: true
+
+    - name: Update listening port
+      lineinfile:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: '^Listen '
+        insertafter: '^#Listen '
+        line: Listen 8080
+      notify:  restart_httpd
+
+    - name: Force handlers flush with the meta module
+      meta: flush_handlers
+      
+    - name: Test connectivity from localhost
+      uri:
+        url: "http://{{ ansible_facts['fqdn'] }}"
+        status_code: 200
+      delegate_to: localhost
+
+  handlers:
+    - name: restart_httpd
+      service:
+        name: httpd
+        state: restarted
+
+
+
+

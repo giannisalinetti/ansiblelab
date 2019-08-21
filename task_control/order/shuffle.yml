@@ -1,0 +1,6 @@
+- name: Control order of host execution
+  hosts: localhost
+  order: shuffle
+  tasks:
+    - name: Create a demo file
+      shell: date > /tmp/demo_date.txt

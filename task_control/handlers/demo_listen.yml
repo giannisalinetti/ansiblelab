@@ -1,0 +1,31 @@
+---
+- name: Demostrate the listen keyword
+  hosts: all
+  become: true
+  tasks:
+    - name: Install the database server
+      yum:
+        name:
+          - postgresql
+          - postgresql-server
+          - python3-psycopg2
+        state: latest
+      notify: post_install
+      
+  # Both handlers are triggered by the same task by listening on the 
+  # "post_install" notify label.
+  handlers:
+    - name: Start and enable services
+      service:
+        name: postgresql
+        state: started
+        enabled: true
+      listen: post_install
+
+    - name: Initialize database
+      command: /usr/bin/initdb -D /var/lib/pgsql/data
+      become_user: postgres
+      vars:
+        ansible_ssh_pipelining: true
+      listen: post_install
+

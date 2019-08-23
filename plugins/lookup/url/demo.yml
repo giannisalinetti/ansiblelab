@@ -1,0 +1,15 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Show the url lookup plugin behavior
+      set_fact:
+       # The errors='warn' arguments tells the lookup function to print a warn message and continue if the action fails
+       # The default() function produces a default value if the url is not found. The True option is necessary if the output of the
+       # lookup is a False boolean.
+       url_content: "{{ lookup('url', 'http://git.lab.example.com:8081/', split_lines=True, errors='warn') | default('Empty url content', True) }}"
+    - name: Print output
+      debug:
+        var: url_content
+

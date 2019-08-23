@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Show the lines lookup plugin behavior
+      set_fact:
+        # The lines plugin, similar to pipe, produces an output with separated
+        # lines. Paired with query, it can produce a list.
+        etc_content: "{{ query('lines', 'ps aux') }}"
+    - name: Print only systemd related processes
+      debug:
+        msg: "{{ item }}"
+      when: "'/usr/lib/systemd/systemd' in item"
+      loop: "{{ etc_content }}"
+

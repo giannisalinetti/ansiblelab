@@ -1,0 +1,15 @@
+---
+- name: Password lookup plugin demo
+  hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Generate a password and set it as a fact
+      set_fact:
+        # The password lookup is useful to generate random passwords and
+        # store their content in files. using the /dev/null destination
+        # forces to plugin to only print th password and not store it.
+        my_password: "{{ lookup('password', '/dev/null', length=16) }}"
+    - name: Print debug info
+      debug:
+        var: my_password

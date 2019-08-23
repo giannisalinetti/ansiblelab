@@ -1,0 +1,12 @@
+---
+- name: Demo of files lookup plugin
+  hosts: localhost
+  become: false
+  gather_facts: false
+  tasks:
+    - name: Load the content of the /etc/motd file
+      set_fact:
+        motd: "{{ lookup('file', '/etc/motd', errors='warn') | default('Empty message of the day', True) }}"
+    - debug:
+        var: motd
+

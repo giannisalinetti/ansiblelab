@@ -1,0 +1,15 @@
+---
+- name: Demonstrate custom usage of the setup module
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Execute the setup module selectively
+      setup:
+       gather_subset:
+         - '!all'
+         - 'network'
+    - name: Print IPv4 interfaces details
+      debug:
+        var: ansible_facts[item]['ipv4']
+      loop: "{{ ansible_facts['interfaces'] }}"
+

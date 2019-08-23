@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Create a custom fact from the dns query result
+      set_fact:
+        dns_query: "{{ lookup('dig', 'example.com', 'qtype=A' ) }}"
+    - debug:
+        var: dns_query
+

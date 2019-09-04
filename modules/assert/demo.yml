@@ -1,0 +1,20 @@
+---
+- name: Demostrate assert module
+  hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Run setup with partial gathering
+      setup:
+        gather_subset: 
+          - '!all'
+          - '!any'
+          - 'network'
+    - name: Set new custom fact
+      set_fact:
+        server_address: "{{ ansible_facts.default_ipv4.address | ipaddr }}"
+    - name: Assert that the address is correct
+      assert:
+        that: "server_address == ansible_facts.default_ipv4.address"
+        fail_msg: "'server_address' must be {{ ansible_facts.default_ipv4.address }}, but is {{ server_address }}"
+  

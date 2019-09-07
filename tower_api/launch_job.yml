@@ -1,0 +1,43 @@
+- hosts: localhost
+  gather_facts: false
+  vars:
+    tower_host: tower.lab.example.com
+    tower_user: admin
+    tower_password: redhat
+    tower_job: "DEV ftpservers setup"
+  tasks:
+    - name: Launch template
+      uri:
+        url: "https://{{ tower_host }}/api/v2/job_templates/{{ tower_job | urlencode }}/launch/"
+        return_content: true
+        validate_certs: false
+        status_code: [200, 201]
+        user: "{{ tower_user }}"
+        password: "{{ tower_password }}"
+        method: POST
+        force_basic_auth: true
+      register: launch_result
+
+    - name: Print results of launch
+      debug:
+        var: launch_result.json
+       
+    - name: Get job informations
+      uri:
+        url: "https://{{ tower_host }}/api/v2/jobs/{{ launch_result.json.job | urlencode }}/"
+        return_content: true
+        validate_certs: false
+        status_code: [200, 201]
+        user: "{{ tower_user }}"
+        password: "{{ tower_password }}"
+        method: GET
+        force_basic_auth: true
+      register: job_status
+      until: job_status.json.status == 'successful'
+      retries: 30
+      delay: 5
+
+    - name: Print job informtions upon completion
+      debug:
+        var: job_status.json
+

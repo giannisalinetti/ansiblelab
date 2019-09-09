@@ -1,0 +1,34 @@
+---
+- name: Create users on system using templates
+  hosts: localhost
+  gather_facts: false
+  become: true
+  tasks:
+    - name: Check existing groups
+      vars:
+        users_list: "{{ lookup('file', 'users.yml') | from_yaml }}"
+        sg_list: "{{ users_list | map(attribute='secondary_groups') | reject('equalto', '') | list | flatten(levels=1) }}"
+        pg_list: "{{ users_list | map(attribute='primary_group') | reject('equalto', '') | list }}"
+      group:
+        name: "{{ item }}"
+        state: present
+      loop: "{{ pg_list | union(sg_list) }}" 
+    
+    - name: Check if shells are available
+      stat:
+        path: "{{ item }}"
+      loop: "{{ lookup('file', 'users.yml') | from_yaml | map(attribute='shell') | reject('equalto', '') | list }}"
+      register: shell_check
+      failed_when: not shell_check.stat.exists 
+
+    - name: Create users
+      user:
+        name: "{{ item.name }}"
+        uid: "{{ item.uid | default(omit, True) }}"
+        group: "{{ item.primary_gruop | default(omit, True) }}"
+        groups: "{{ item.secondary_groups | default(omit, True ) }}"
+        shell: "{{ item.shell }}"
+        state: present
+        append: yes
+      loop: "{{ lookup('file', 'users.yml') | from_yaml }}"
+

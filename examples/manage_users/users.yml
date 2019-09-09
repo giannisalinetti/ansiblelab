@@ -1,0 +1,9 @@
+- name: mike
+  uid:
+  primary_group: ""
+  secondary_groups:
+    - docker
+    - wheel
+  shell: /bin/bash
+
+

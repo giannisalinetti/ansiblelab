@@ -1,0 +1,18 @@
+---
+- name: Demonstrate json_query filter plugin
+  hosts: localhost
+  vars:
+    managed_hosts:
+      - name: bastion
+        ip:
+          - 172.25.250.254
+          - 172.25.252.1
+      - name: classroom
+        ip:
+          - 172.25.252.254
+
+  tasks:
+    - name: Print a flattened list of ip addresses
+      debug:
+        var: managed_hosts | json_query('[*].ip[*]') | flatten
+

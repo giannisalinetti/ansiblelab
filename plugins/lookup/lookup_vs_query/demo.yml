@@ -3,21 +3,31 @@
   gather_facts: false
   become: false
   tasks:
+      # Lookup will return a comma separated string of items
     - name: Demonstrate lookup lines
       set_fact:
         passwd_lookup: "{{ lookup('lines', 'cat /etc/passwd') }}"
     - name: Print output
       debug:
         var: passwd_lookup
+      # Query will always return a list
     - name: Demonstrate query lines
       set_fact:
         passwd_query: "{{ query('lines', 'cat /etc/passwd') }}"
     - name: Print output
       debug:
         var: passwd_query
-    - name: Demonstrate lookup lines
+      # Appending split(',') function is equivalent to query usage
+    - name: Demonstrate lookup lines with split function
       set_fact:
         passwd_lookup_splitted: "{{ lookup('lines', 'cat /etc/passwd').split(',') }}"
     - name: Print output
       debug:
         var: passwd_lookup_splitted
+      # Using wantlist=True option is equivalent to query usage
+    - name: Demonstrate lookup lines with wantlist option
+      set_fact:
+        passwd_lookup_wantlist: "{{ lookup('lines', 'cat /etc/passwd', wantlist=True) }}"
+    - name: Print output
+      debug:
+        var: passwd_lookup_wantlist

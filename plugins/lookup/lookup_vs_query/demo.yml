@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+  tasks:
+    - name: Demonstrate lookup lines
+      set_fact:
+        passwd_lookup: "{{ lookup('lines', 'cat /etc/passwd') }}"
+    - name: Print output
+      debug:
+        var: passwd_lookup
+    - name: Demonstrate query lines
+      set_fact:
+        passwd_query: "{{ query('lines', 'cat /etc/passwd') }}"
+    - name: Print output
+      debug:
+        var: passwd_query
+    - name: Demonstrate lookup lines
+      set_fact:
+        passwd_lookup_splitted: "{{ lookup('lines', 'cat /etc/passwd').split(',') }}"
+    - name: Print output
+      debug:
+        var: passwd_lookup_splitted

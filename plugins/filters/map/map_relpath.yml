@@ -1,0 +1,18 @@
+---
+- hosts: localhost
+  gather_facts: false
+  become: false
+  vars:
+    repo_dir: "/etc/yum.repos.d"
+  tasks:
+    - name: Collect list of /etc/yum.repod.d file relative paths
+      set_fact:
+        repo_files: "{{ query('fileglob', repo_dir + '/*.repo') | map('relpath', repo_dir) | list }}"
+    - name: Print the content of files
+      set_fact:
+        # We reapply the full path here
+        repo_content_unsplitted: "{{ query('file', repo_dir + '/' + item) }}"
+      loop: "{{ repo_files }}"
+    - debug:
+        var: item.splitlines()
+      loop: "{{ repo_content_unsplitted }}"
